@@ -8,7 +8,7 @@
 # see the RUN step below.
 FROM node:24.22.1-alpine3.24 AS patched-node
 
-FROM ghcr.io/homarr-labs/homarr:v2.7.0
+FROM ghcr.io/homarr-labs/homarr:v2.8.0
 
 COPY --from=patched-node /usr/local/bin/node /tmp/node-patched
 
