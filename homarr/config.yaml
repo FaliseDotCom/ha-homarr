@@ -1,5 +1,5 @@
 name: Homarr
-version: "2.7.0"
+version: "2.8.0"
 slug: homarr
 description: A sleek, modern dashboard for your home lab and its services.
 url: https://github.com/FaliseDotCom/ha-homarr/tree/main/homarr
