@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Runs a Homarr command line command inside the running app, with the app's
+# encryption key and settings, for example:
+#   docker exec -it <container> homarr-cli users list
+
+set -euo pipefail
+
+readonly CONSOLE_ENV_FILE=/run/homarr-app/console.env
+
+if [ ! -r "$CONSOLE_ENV_FILE" ]
+then
+  echo "homarr-cli: Homarr is not running yet, or this is not run as root." >&2
+  exit 1
+fi
+
+# shellcheck source=/dev/null
+source "$CONSOLE_ENV_FILE"
+
+exec /usr/bin/homarr "$@"

@@ -1,0 +1,26 @@
+configuration:
+  log_level:
+    name: Log level
+    description: How much Homarr writes to the app log. Use debug only while tracking down a problem.
+  no_external_connection:
+    name: No internet connections
+    description: >-
+      Stops Homarr from contacting the internet itself, for update checks, weather, location search and RSS
+      feeds. Integrations with services on your own network keep working.
+  base_url:
+    name: Base URL
+    description: >-
+      The public address Homarr is reached on, without a path, for example https://homarr.example.com.
+      Only needed behind a reverse proxy that provides HTTPS.
+  trusted_proxies:
+    name: Trusted proxies
+    description: >-
+      Comma-separated IP addresses or narrow ranges of reverse proxies whose X-Forwarded-For header Homarr may
+      trust, for example 172.30.33.5. Leave empty when no proxy is used.
+  env_vars:
+    name: Environment variables
+    description: >-
+      Extra Homarr environment variables, for example to sign in with OIDC or LDAP. Each entry has a name and a
+      value. See the Documentation tab.
+network:
+  7575/tcp: Homarr web interface
