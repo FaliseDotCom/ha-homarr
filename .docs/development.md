@@ -8,7 +8,7 @@ How the Homarr app is put together, and how to test a change before it reaches u
 repository.yaml              App repository definition, read by the Supervisor
 homarr/
   config.yaml                App definition: version, port, options and schema
-  Dockerfile                 Upstream Homarr image plus jq, tzdata and a health check
+  Dockerfile                 Upstream Homarr image plus security updates, jq, tzdata and a health check
   run.sh                     Reads the options, prepares the environment, starts Homarr
   homarr-cli                 Runs Homarr's command line inside the running app
   DOCS.md                    User documentation, shown on the Documentation tab
@@ -17,7 +17,7 @@ homarr/
   icon.png, logo.png         Artwork, resized from Homarr's own logo
   translations/              Option names and descriptions (en, nl)
 .devcontainer/, .vscode/     Home Assistant development environment
-.docs/                       Documentation for contributors
+.docs/                       Documentation for contributors; security.md covers the image patches
 .github/                     Dependabot and the workflow that completes its Homarr updates
 scripts/update-homarr.sh     Bumps the app to a new Homarr release
 ```
@@ -29,6 +29,9 @@ The image extends the official
 image, pinned to an exact release. That image is Alpine based and already runs everything
 Homarr needs in one container: nginx on port 7575 in front of Next.js (port 3000) and its
 WebSocket server (port 3001), an internal Redis, and SQLite in `/appdata/db/db.sqlite`.
+
+On top of it, the Dockerfile upgrades the Alpine packages to their latest security fixes and
+can swap in a newer Node.js; see [Security](security.md).
 
 `run.sh` replaces the upstream entrypoint; Docker's `init` (enabled with `init: true`) runs it
 as a child of a minimal init process, which forwards signals and reaps zombies. It:

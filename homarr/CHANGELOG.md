@@ -9,6 +9,8 @@ version the app contains; see the
 First release.
 
 - Homarr 2.7.0 with its bundled SQLite database and Redis.
+- Security updates on top of Homarr's image: Node.js 24.22.1 instead of 24.18.0, and the
+  latest Alpine packages, including a fixed zlib.
 - Generates and keeps the encryption key for Homarr's stored secrets.
 - All data in Home Assistant backups.
 - Options for the log level, internet access, the public address behind a proxy, trusted

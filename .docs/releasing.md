@@ -69,6 +69,10 @@ For a change to the app itself without a new Homarr release, add a fourth versio
 
 ## Changes to watch for
 
+- **The patched Node.js.** When a Homarr release ships a Node.js at least as new as the one
+  in the Dockerfile's `patched-node` stage, the build log says `keeping` and the stage does
+  nothing; remove it then, as described in [Security](security.md#patched-nodejs).
+
 - **A changed entrypoint or `run.sh`.** The app relies on `/app/entrypoint.sh` taking the
   command to run as its arguments, on `/app/run.sh` being started as `sh run.sh` from `/app`,
   and on the upstream `run.sh` stopping its processes on `SIGTERM`.

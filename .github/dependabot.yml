@@ -9,6 +9,11 @@ updates:
       interval: daily
     commit-message:
       prefix: Update
+    ignore:
+      # The patched Node.js must keep upstream's major version, or the
+      # Dockerfile keeps upstream's Node and the patch does nothing.
+      - dependency-name: node
+        update-types: [ "version-update:semver-major" ]
   - package-ecosystem: github-actions
     directory: /
     schedule:
