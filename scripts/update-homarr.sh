@@ -31,9 +31,11 @@ latest_release()
   curl -fsSL "$RELEASES_API" | sed -n 's/.*"tag_name": *"v\{0,1\}\([^"]*\)".*/\1/p' | head -n 1
 }
 
+# Reads the Homarr version from config.yaml rather than the Dockerfile, which a
+# Dependabot pull request has already bumped; a fourth app-only segment is dropped.
 current_version()
 {
-  sed -n "s|^FROM $IMAGE:v\(.*\)$|\1|p" "$DOCKERFILE"
+  sed -n 's|^version: "\([0-9]*\.[0-9]*\.[0-9]*\).*"$|\1|p' "$CONFIG"
 }
 
 # The Supervisor architectures amd64 and aarch64 need linux/amd64 and linux/arm64.

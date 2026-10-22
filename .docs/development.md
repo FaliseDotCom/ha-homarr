@@ -18,6 +18,7 @@ homarr/
   translations/              Option names and descriptions (en, nl)
 .devcontainer/, .vscode/     Home Assistant development environment
 .docs/                       Documentation for contributors
+.github/                     Dependabot and the workflow that completes its Homarr updates
 scripts/update-homarr.sh     Bumps the app to a new Homarr release
 ```
 
@@ -133,6 +134,12 @@ Work through these in order. Each catches problems the previous one cannot.
 ```bash
 docker run --rm -v "$PWD:/mnt" koalaman/shellcheck:stable \
   /mnt/homarr/run.sh /mnt/homarr/homarr-cli /mnt/scripts/update-homarr.sh
+```
+
+After changing a workflow, check it with [actionlint](https://github.com/rhysd/actionlint):
+
+```bash
+docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest
 ```
 
 ### 2. Build and run with Docker

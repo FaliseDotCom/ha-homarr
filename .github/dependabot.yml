@@ -1,0 +1,17 @@
+# Opens a pull request when a new Homarr image or GitHub Action is released.
+# The Homarr pull requests only change the Dockerfile; the dependabot-homarr
+# workflow then brings the app version, badge and changelog in line.
+version: 2
+updates:
+  - package-ecosystem: docker
+    directory: /homarr
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: Update
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: Update

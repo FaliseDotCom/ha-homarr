@@ -1,0 +1,38 @@
+# Completes a Dependabot pull request for a new Homarr image: runs the update
+# script, which checks the image for both architectures, sets the app version
+# and README badge, adds a changelog entry and builds the image, then commits
+# the result to the pull request. Merging it releases the update to users.
+name: Complete Homarr update
+
+on:
+  pull_request:
+    paths:
+      - homarr/Dockerfile
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Update the version, badge and changelog
+        run: scripts/update-homarr.sh "$(sed -n 's|^FROM ghcr.io/homarr-labs/homarr:v||p' homarr/Dockerfile)"
+
+      - name: Commit to the pull request
+        run: |
+          if git diff --quiet
+          then
+            exit 0
+          fi
+
+          version=$(sed -n 's|^version: "\(.*\)"$|\1|p' homarr/config.yaml)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Set the app version to $version"
+          git push

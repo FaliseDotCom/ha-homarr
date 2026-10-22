@@ -8,6 +8,22 @@ version in Home Assistant.
 This repository does not contain Homarr's source code. The app is built from the official
 Homarr image, so updating Homarr means pointing the app at a newer image tag.
 
+### Through Dependabot
+
+Dependabot checks daily for a new Homarr image (`.github/dependabot.yml`) and opens a pull
+request that changes the `FROM` line in `homarr/Dockerfile`. The **Complete Homarr update**
+workflow (`.github/workflows/dependabot-homarr.yml`) then runs the update script on that pull
+request and commits the new app version, README badge and changelog entry to it. The
+script's image build doubles as a check that the new release still builds on `amd64`.
+
+Before merging, do steps 2 and 5 below: read the release notes, and test an upgrade from the
+previous release. Add anything users should know to the changelog entry. After merging, tag
+the merge commit with the version and push the tag (step 6).
+
+Dependabot stops rebasing a pull request once the workflow has committed to it. When the
+pull request falls behind `main`, rebase it from GitHub's **Update branch** button. Dependabot
+also keeps the actions used by the workflow up to date, in separate weekly pull requests.
+
 ### With the update script
 
 From the repository root, in Git Bash or any other Bash shell, with Docker running:
