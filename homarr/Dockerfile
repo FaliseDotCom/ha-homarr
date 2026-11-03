@@ -6,7 +6,7 @@
 # A Node.js release with security fixes the upstream image does not have yet.
 # Only used when it is newer than upstream's Node with the same major version;
 # see the RUN step below.
-FROM node:24.22.1-alpine3.24 AS patched-node
+FROM node:24.22.2-alpine3.24 AS patched-node
 
 FROM ghcr.io/homarr-labs/homarr:v2.10.0
 
