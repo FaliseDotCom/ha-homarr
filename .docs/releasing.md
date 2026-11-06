@@ -69,17 +69,16 @@ For a change to the app itself without a new Homarr release, add a fourth versio
 
 ## Changes to watch for
 
-- **The patched Node.js.** When a Homarr release ships a Node.js at least as new as the one
-  in the Dockerfile's `patched-node` stage, the build log says `keeping` and the stage does
-  nothing; remove it then, as described in [Security](security.md#patched-nodejs).
-
+- **A changed base image.** Homarr 2.11.0 moved from Alpine to Debian without mentioning it
+  in its release notes, so compare upstream's `Dockerfile` between the two releases. The app
+  relies on `apt-get`, on Node for the health check, and on `bash`, `openssl` and `envsubst`.
 - **A changed entrypoint or `run.sh`.** The app relies on `/app/entrypoint.sh` taking the
   command to run as its arguments, on `/app/run.sh` being started as `sh run.sh` from `/app`,
   and on the upstream `run.sh` stopping its processes on `SIGTERM`.
 - **Paths under `/appdata`.** The app maps its data folder there; a new upstream data
   location must stay inside `/appdata` or it is lost on every restart.
-- **The health endpoint.** The health check uses `/api/health/live` and BusyBox `wget`.
-  Check that both still exist, and that Homarr's request proxy still skips `/api`.
+- **The health endpoint.** The health check calls `/api/health/live` from Node. Check that
+  the endpoint still exists, and that Homarr's request proxy still skips `/api`.
 - **New required environment variables.** `run.sh` provides `SECRET_ENCRYPTION_KEY`; a new
   required secret needs the same treatment.
 - **A move away from SQLite.** Homarr v2 dropped MySQL. A change to the default database

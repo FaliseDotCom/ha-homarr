@@ -26,12 +26,13 @@ scripts/update-homarr.sh     Bumps the app to a new Homarr release
 
 The image extends the official
 [`ghcr.io/homarr-labs/homarr`](https://github.com/homarr-labs/homarr/pkgs/container/homarr)
-image, pinned to an exact release. That image is Alpine based and already runs everything
-Homarr needs in one container: nginx on port 7575 in front of Next.js (port 3000) and its
-WebSocket server (port 3001), an internal Redis, and SQLite in `/appdata/db/db.sqlite`.
+image, pinned to an exact release. That image is Debian based (Alpine before Homarr 2.11.0)
+and already runs everything Homarr needs in one container: nginx on port 7575 in front of
+Next.js (port 3000) and its WebSocket server (port 3001), an internal Redis, and SQLite in
+`/appdata/db/db.sqlite`.
 
-On top of it, the Dockerfile upgrades the Alpine packages to their latest security fixes and
-can swap in a newer Node.js; see [Security](security.md).
+On top of it, the Dockerfile upgrades the Debian packages to their latest security fixes; see
+[Security](security.md).
 
 `run.sh` replaces the upstream entrypoint; Docker's `init` (enabled with `init: true`) runs it
 as a child of a minimal init process, which forwards signals and reaps zombies. It:
@@ -51,8 +52,9 @@ The Dockerfile defines a health check on `/api/health/live` through nginx. That 
 checks both the database and Redis, and nginx only starts after the migrations, so the
 Supervisor shows the app as *starting* until Homarr is ready, and its watchdog restarts the
 app when the check fails after the 5-minute start period. Homarr's request proxy skips
-`/api` paths, so the check is not redirected to the onboarding page on a fresh install. The
-upstream image has no health check of its own.
+`/api` paths, so the check is not redirected to the onboarding page on a fresh install. It
+replaces the upstream image's own check to allow a 5-minute start period instead of 60
+seconds. Like upstream's, it runs in Node, because the image has neither `wget` nor `curl`.
 
 `timeout: 30` in `config.yaml` gives Redis and SQLite time to finish writing before Docker
 kills the container.
@@ -122,8 +124,8 @@ through `env_vars`.
 write. Homarr restarts in seconds, so a short stop is the simpler and safer trade.
 
 **Locally built image.** The Supervisor builds the Dockerfile on the user's device; there is
-no `image` key in `config.yaml`. The build only adds two Alpine packages to the upstream
-image, so it takes about as long as pulling that image.
+no `image` key in `config.yaml`. The build only adds `jq` and any pending Debian updates to
+the upstream image, so it takes about as long as pulling that image.
 
 **Upstream versioned tags.** `ghcr.io/homarr-labs/homarr:v<version>` is published for
 `amd64` and `arm64`, which map to the Supervisor's `amd64` and `aarch64`.
