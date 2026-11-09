@@ -4,6 +4,10 @@ All notable changes to this app are documented here. The version number is the H
 version the app contains; see the
 [Homarr releases](https://github.com/homarr-labs/homarr/releases) for changes in Homarr itself.
 
+## 2.12.0
+
+- Homarr 2.12.0. See the [Homarr 2.12.0 release notes](https://github.com/homarr-labs/homarr/releases/tag/v2.12.0).
+
 ## 2.11.1
 
 - Homarr 2.11.1. See the [Homarr 2.11.1 release notes](https://github.com/homarr-labs/homarr/releases/tag/v2.11.1).
