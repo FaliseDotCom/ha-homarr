@@ -3,7 +3,7 @@
 # The upstream image is pinned to an exact release. Bump this tag and the
 # `version` in config.yaml together (see .docs/releasing.md).
 
-FROM ghcr.io/homarr-labs/homarr:v2.12.0
+FROM ghcr.io/homarr-labs/homarr:v2.13.0
 
 # Brings the Debian packages up to their latest security fixes. jq reads the
 # app options; tzdata lets the TZ that the Supervisor passes in apply to the
