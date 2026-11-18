@@ -7,6 +7,8 @@ version the app contains; see the
 ## 2.13.1
 
 - Homarr 2.13.1. See the [Homarr 2.13.1 release notes](https://github.com/homarr-labs/homarr/releases/tag/v2.13.1).
+- Fixes the WebSocket connections that Homarr 2.13.0 broke in production installs, including
+  this app.
 
 ## 2.13.0
 
