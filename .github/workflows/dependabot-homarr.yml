@@ -16,6 +16,7 @@ jobs:
   sync:
     if: github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
         with:
@@ -31,8 +32,11 @@ jobs:
             exit 0
           fi
 
+          # [skip ci] keeps this push from starting the workflow a second
+          # time: GitHub holds that run for approval, and it closes as failed
+          # when the pull request is merged.
           version=$(sed -n 's|^version: "\(.*\)"$|\1|p' homarr/config.yaml)
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -am "Set the app version to $version"
+          git commit -am "Set the app version to $version [skip ci]"
           git push

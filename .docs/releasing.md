@@ -14,7 +14,9 @@ Dependabot checks daily for a new Homarr image (`.github/dependabot.yml`) and op
 request that changes the `FROM` line in `homarr/Dockerfile`. The **Complete Homarr update**
 workflow (`.github/workflows/dependabot-homarr.yml`) then runs the update script on that pull
 request and commits the new app version, README badge and changelog entry to it. The
-script's image build doubles as a check that the new release still builds on `amd64`.
+script's image build doubles as a check that the new release still builds on `amd64`. The
+commit message carries `[skip ci]`, so the workflow's own push does not start a second run;
+before that, GitHub held such a run for approval and closed it as failed on merge.
 
 Before merging, do steps 2 and 5 below: read the release notes, and test an upgrade from the
 previous release. Add anything users should know to the changelog entry. After merging, tag
