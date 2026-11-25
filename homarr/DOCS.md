@@ -286,6 +286,8 @@ from the app itself start with `[homarr-app]`.
 - Integration secrets are encrypted in the database with a key that is generated on first
   start and stored in the app's private data, never in the options.
 - The app has no access to Docker, so Homarr's Docker page is turned off.
+- The app has its own AppArmor profile, which limits what it may do on your device. For now
+  it only logs what it would block.
 
 ## Support
 

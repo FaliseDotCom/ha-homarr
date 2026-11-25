@@ -1,6 +1,12 @@
 # Plan: a custom AppArmor profile
 
-Started 2026-11-25. Status: not started.
+Started 2026-11-25. Status: step 1 done; the profile shipped in complain mode with app
+version 2.14.0.1. Next: steps 3 and 4 on a real installation.
+
+Complain mode blocks nothing, so the profile could ship before testing: it already gives the
+rating point, and every installation logs what an enforced profile would refuse. Step 2 is
+therefore the released app itself rather than a local copy, and step 7 becomes the release
+that removes `complain`.
 
 ## Goal
 

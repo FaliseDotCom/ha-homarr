@@ -1,0 +1,78 @@
+# AppArmor profile for the Homarr app. The Supervisor loads it when the app is
+# installed or updated, and renames the profile to the app ID.
+#
+# It runs in complain mode: it blocks nothing, and logs every access it would
+# refuse as apparmor="ALLOWED". Those log lines complete the rules before the
+# profile is enforced; see .docs/plans/2026-11-25-apparmor-profile.md.
+#
+# Only abstractions/base is included, as in Home Assistant's own example,
+# because the host must provide every included file.
+
+#include <tunables/global>
+
+profile homarr flags=(attach_disconnected,mediate_deleted,complain) {
+  #include <abstractions/base>
+
+  # Root capabilities for the start scripts and nginx: changing owners under
+  # /appdata, and nginx workers and setpriv switching to another user.
+  capability chown,
+  capability dac_override,
+  capability fowner,
+  capability fsetid,
+  capability kill,
+  capability setgid,
+  capability setuid,
+
+  # Port 7575, nginx to Next.js and the WebSocket server, Redis on loopback,
+  # outgoing calls to integrations and DNS, and Node listing the network
+  # interfaces.
+  network inet stream,
+  network inet6 stream,
+  network inet dgram,
+  network inet6 dgram,
+  network unix,
+  network netlink raw,
+
+  # Docker stops the app with SIGTERM; the scripts signal their own processes
+  # on shutdown and when Next.js restarts.
+  signal (receive) peer=unconfined,
+  signal (send, receive) peer=*_homarr,
+
+  # Docker's init, the app's scripts and every program they start.
+  /usr/sbin/docker-init ix,
+  /run.sh rix,
+  /usr/local/bin/homarr-cli rix,
+  /usr/bin/** rix,
+  /usr/sbin/nginx rix,
+  /usr/local/bin/** rix,
+  /usr/lib/** rm,
+  /usr/share/** r,
+  /etc/** r,
+
+  # nginx's configuration is rendered from its template on every start.
+  /etc/nginx/nginx.conf w,
+
+  # Homarr itself, its native Node modules, and the Next.js runtime cache.
+  /app/** r,
+  /app/**.node m,
+  /app/entrypoint.sh rix,
+  /app/apps/nextjs/.next/cache/{,**} rwk,
+
+  # The app's data folder: database, Redis dump, certificates, encryption key
+  # and options.
+  /appdata/{,**} rwk,
+
+  # Runtime files: nginx's PID and temporary files, console.env for
+  # homarr-cli, and temporary files of Node and the scripts.
+  /run/{,**} rwk,
+  /tmp/{,**} rwk,
+  /var/cache/nginx/{,**} rwk,
+  /var/lib/nginx/{,**} rwk,
+  /var/log/nginx/{,**} rw,
+  /dev/tty rw,
+
+  # System information read by Node and upstream's run.sh (the IPv6 check).
+  /proc/** r,
+  /sys/fs/cgroup/** r,
+  /sys/devices/system/cpu/** r,
+}

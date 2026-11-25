@@ -11,6 +11,7 @@ homarr/
   Dockerfile                 Upstream Homarr image plus security updates, jq, tzdata and a health check
   run.sh                     Reads the options, prepares the environment, starts Homarr
   homarr-cli                 Runs Homarr's command line inside the running app
+  apparmor.txt               AppArmor profile, loaded by the Supervisor (complain mode for now)
   DOCS.md                    User documentation, shown on the Documentation tab
   README.md                  Short description, shown in the app store
   CHANGELOG.md               Release notes, shown when an update is available
@@ -109,6 +110,24 @@ with a Webpage dashboard; Homarr's Content Security Policy allows framing
 `docker_api` gives an app control over the whole host and lowers its security rating to the
 minimum. The app sets `ENABLE_DOCKER=false` instead; users who run a Docker socket proxy can
 turn it back on with `env_vars` and `DOCKER_HOSTNAMES`.
+
+**Own AppArmor profile.** `homarr/apparmor.txt` replaces Docker's default profile and raises
+the security rating from 5 to 6, the most this app can reach without ingress. It lists what
+the scripts, nginx, Redis and Node use: a few root capabilities, TCP and UDP, the programs
+under `/usr`, read access to `/app`, and write access to `/appdata`, the Next.js cache and
+the runtime folders. It only includes `abstractions/base`, because the host must provide
+every included file. The profile still runs in complain mode, which blocks nothing and logs
+each access it would refuse as `apparmor="ALLOWED"`; the
+[AppArmor plan](plans/2026-11-25-apparmor-profile.md) describes how it gets enforced. Check
+a changed profile's syntax with both AppArmor 3 and 4:
+
+```bash
+for release in bookworm trixie
+do
+  docker run --rm -v "$PWD/homarr:/mnt:ro" debian:$release-slim sh -c \
+    'apt-get update -qq && apt-get install -y -qq apparmor >/dev/null && apparmor_parser -Q -K -T /mnt/apparmor.txt && echo OK'
+done
+```
 
 **Generated encryption key.** A key in the options would be visible on the Configuration
 tab and easy to lose or change by accident, which makes every stored integration secret

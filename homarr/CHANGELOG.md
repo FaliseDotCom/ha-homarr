@@ -4,6 +4,11 @@ All notable changes to this app are documented here. The version number is the H
 version the app contains; see the
 [Homarr releases](https://github.com/homarr-labs/homarr/releases) for changes in Homarr itself.
 
+## 2.14.0.1
+
+- The app has its own AppArmor profile, which raises its security rating from 5 to 6. For
+  now the profile only logs what it would block, so nothing changes for Homarr itself.
+
 ## 2.14.0
 
 - Homarr 2.14.0. See the [Homarr 2.14.0 release notes](https://github.com/homarr-labs/homarr/releases/tag/v2.14.0).
