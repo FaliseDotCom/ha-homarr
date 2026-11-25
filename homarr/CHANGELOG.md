@@ -7,6 +7,8 @@ version the app contains; see the
 ## 2.14.0
 
 - Homarr 2.14.0. See the [Homarr 2.14.0 release notes](https://github.com/homarr-labs/homarr/releases/tag/v2.14.0).
+- Includes security updates for the bundled nginx (1.30.7), Node.js (24.22.3) and Redis
+  (8.8.4).
 
 ## 2.13.1
 
